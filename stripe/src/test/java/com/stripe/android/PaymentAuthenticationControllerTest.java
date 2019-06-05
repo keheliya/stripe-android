@@ -39,6 +39,7 @@ import static org.mockito.Mockito.when;
 public class PaymentAuthenticationControllerTest {
 
     private static final String DIRECTORY_SERVER_ID = "F000000000";
+    private static final String DIRECTORY_SERVER_NAME = "visa";
     private static final String MESSAGE_VERSION = "2.1.0";
     private static final String PUBLISHABLE_KEY = ApiKeyFixtures.FAKE_PUBLISHABLE_KEY;
     private static final int MAX_TIMEOUT = 5;
@@ -69,8 +70,8 @@ public class PaymentAuthenticationControllerTest {
         MockitoAnnotations.initMocks(this);
         when(mTransaction.getAuthenticationRequestParameters())
                 .thenReturn(Stripe3ds2Fixtures.AREQ_PARAMS);
-        when(mThreeDs2Service.createTransaction(DIRECTORY_SERVER_ID, MESSAGE_VERSION, false))
-                .thenReturn(mTransaction);
+        when(mThreeDs2Service.createTransaction(DIRECTORY_SERVER_ID, MESSAGE_VERSION, false,
+                DIRECTORY_SERVER_NAME)).thenReturn(mTransaction);
         when(mMessageVersionRegistry.getCurrent()).thenReturn(MESSAGE_VERSION);
         mController = new PaymentAuthenticationController(
                 ApplicationProvider.getApplicationContext(),
@@ -86,7 +87,8 @@ public class PaymentAuthenticationControllerTest {
         when(mTransaction.getProgressView(mActivity)).thenReturn(mProgressDialog);
         mController.handleNextAction(mActivity, PaymentIntentFixtures.PI_REQUIRES_3DS2,
                 PUBLISHABLE_KEY);
-        verify(mThreeDs2Service).createTransaction(DIRECTORY_SERVER_ID, MESSAGE_VERSION, false);
+        verify(mThreeDs2Service).createTransaction(DIRECTORY_SERVER_ID, MESSAGE_VERSION, false,
+                DIRECTORY_SERVER_NAME);
         verify(mApiHandler).start3ds2Auth(ArgumentMatchers.<Stripe3ds2AuthParams>any(),
                 eq(PUBLISHABLE_KEY),
                 ArgumentMatchers.<ApiResultCallback<Stripe3ds2AuthResult>>any());

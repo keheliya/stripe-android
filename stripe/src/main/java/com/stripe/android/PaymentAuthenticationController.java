@@ -16,6 +16,7 @@ import com.stripe.android.model.PaymentIntentParams;
 import com.stripe.android.model.Stripe3ds2AuthResult;
 import com.stripe.android.model.Stripe3ds2Fingerprint;
 import com.stripe.android.stripe3ds2.init.StripeConfigParameters;
+import com.stripe.android.stripe3ds2.init.ui.StripeToolbarCustomization;
 import com.stripe.android.stripe3ds2.service.StripeThreeDs2Service;
 import com.stripe.android.stripe3ds2.service.StripeThreeDs2ServiceImpl;
 import com.stripe.android.stripe3ds2.transaction.AuthenticationRequestParameters;
@@ -189,7 +190,8 @@ class PaymentAuthenticationController {
                                @NonNull String publishableKey) {
         final Transaction transaction =
                 mThreeDs2Service.createTransaction(mDirectoryServerId,
-                        mMessageVersionRegistry.getCurrent(), false);
+                        mMessageVersionRegistry.getCurrent(), false,
+                        stripe3ds2Fingerprint.directoryServerName);
         final ProgressDialog dialog = transaction.getProgressView(activity);
         dialog.show();
 
@@ -218,7 +220,13 @@ class PaymentAuthenticationController {
      */
     private void begin3ds1Auth(@NonNull Activity activity,
                                @NonNull PaymentIntent.RedirectData redirectData) {
-        new PaymentAuthWebViewStarter(activity, REQUEST_CODE).start(redirectData);
+        final StripeToolbarCustomization toolbarCustomization = new StripeToolbarCustomization();
+        toolbarCustomization.setBackgroundColor("#FF0000");
+        toolbarCustomization.setButtonText("ABORT!");
+        toolbarCustomization.setHeaderText("IS THIS SECURE?");
+
+        new PaymentAuthWebViewStarter(activity, REQUEST_CODE, toolbarCustomization)
+                .start(redirectData);
     }
 
     private void handleError(@NonNull Activity activity,
