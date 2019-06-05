@@ -220,13 +220,7 @@ class PaymentAuthenticationController {
      */
     private void begin3ds1Auth(@NonNull Activity activity,
                                @NonNull PaymentIntent.RedirectData redirectData) {
-        final StripeToolbarCustomization toolbarCustomization = new StripeToolbarCustomization();
-        toolbarCustomization.setBackgroundColor("#FF0000");
-        toolbarCustomization.setButtonText("ABORT!");
-        toolbarCustomization.setHeaderText("IS THIS SECURE?");
-
-        new PaymentAuthWebViewStarter(activity, REQUEST_CODE, toolbarCustomization)
-                .start(redirectData);
+        new PaymentAuthWebViewStarter(activity, REQUEST_CODE).start(redirectData);
     }
 
     private void handleError(@NonNull Activity activity,
