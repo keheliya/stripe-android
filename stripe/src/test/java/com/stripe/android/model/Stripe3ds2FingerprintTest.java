@@ -63,15 +63,10 @@ public class Stripe3ds2FingerprintTest {
                 stripe3ds2Fingerprint.serverTransactionId);
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void create_withUnknownDsJson_shouldCreateObject() throws JSONException {
         final Stripe3ds2Fingerprint stripe3ds2Fingerprint =
                 Stripe3ds2Fingerprint.create(new JSONObject(UNKNOWN_DS_JSON));
-        assertEquals("src_1EZl3YCRMbs6FrXfYgJXF46w",
-                stripe3ds2Fingerprint.source);
-        assertNull(stripe3ds2Fingerprint.directoryServerName);
-        assertEquals("b31807ca-e7d6-4685-a7e3-53fbd2962135",
-                stripe3ds2Fingerprint.serverTransactionId);
     }
 
     @Test(expected = IllegalArgumentException.class)
