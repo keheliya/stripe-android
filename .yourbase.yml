@@ -1,0 +1,23 @@
+
+dependencies:
+  build:
+    - android:latest
+    - androidndk:r15c
+    - java:8.202.08
+    - gradle:5.4.1
+build_targets:
+  - name: default
+    commands:
+      - git submodule init
+      - git submodule update
+      - sdkmanager --install tools
+      - sdkmanager --install platform-tools
+      - sdkmanager --install build-tools;28.0.3
+      - sdkmanager --install platforms;android-28
+      - sdkmanager --install system-images;android-28;default;x86_64
+      - ./gradlew :stripe:checkstyle :example:checkstyle :samplestore:checkstyle lint
+      - ./gradlew clean test
+ci:
+  builds:
+    - name: android_build
+      build_target: default
